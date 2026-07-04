@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONECTA PET - Adote um Amigo de 4 Patas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-paw"></i>
+                <span>CONECTA PET</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#pets">Encontrar Pets</a></li>
+                <li><a href="#disponibilizar">Disponibilizar Pet</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#dicas">Dicas</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+            <div class="nav-icons">
+                <button class="favoritos-btn" onclick="toggleFavoritos()">
+                    <i class="fas fa-heart"></i>
+                    <span class="favoritos-count">0</span>
+                </button>
+                <button class="hamburger" onclick="toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO SECTION ===== -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Encontre Seu Melhor Amigo</h1>
+            <p>Conectando pessoas a animais que precisam de um lar amoroso</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="scrollTo('pets')">
+                    <i class="fas fa-search"></i> Ver Pets Disponíveis
+                </button>
+                <button class="btn btn-secondary" onclick="scrollTo('disponibilizar')">
+                    <i class="fas fa-heart"></i> Disponibilizar um Pet
+                </button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-pet">🐕 🐱</div>
+        </div>
+    </section>
+
+    <!-- ===== SEÇÃO DE FILTROS E BUSCA ===== -->
+    <section id="pets" class="pets-section">
+        <div class="container">
+            <h2 class="section-title">Encontre Seu Novo Amigo</h2>
+            
+            <!-- FILTROS -->
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="tipo">Tipo de Animal</label>
+                    <select id="tipo" onchange="filtrarPets()">
+                        <option value="">Todos</option>
+                        <option value="cachorro">🐕 Cachorro</option>
+                        <option value="gato">🐱 Gato</option>
+                        <option value="coelho">🐰 Coelho</option>
+                        <option value="passaro">🐦 Pássaro</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="idade">Idade</label>
+                    <select id="idade" onchange="filtrarPets()">
+                        <option value="">Qualquer uma</option>
+                        <option value="filhote">Filhote (0-1 ano)</option>
+                        <option value="adulto">Adulto (1-7 anos)</option>
+                        <option value="idoso">Idoso (7+ anos)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="tamanho">Tamanho</label>
+                    <select id="tamanho" onchange="filtrarPets()">
+                        <option value="">Qualquer um</option>
+                        <option value="pequeno">Pequeno</option>
+                        <option value="medio">Médio</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="localizacao">Localização</label>
+                    <input type="text" id="localizacao" placeholder="Sua cidade" onkeyup="filtrarPets()">
+                </div>
+
+                <button class="btn btn-reset" onclick="limparFiltros()">
+                    <i class="fas fa-redo"></i> Limpar Filtros
+                </button>
+            </div>
+
+            <!-- GRID DE PETS -->
+            <div class="pets-grid" id="petsGrid">
+                <!-- Cards serão inseridos aqui por JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SEÇÃO QUERO ADOTAR ===== -->
+    <section id="adotar" class="adoption-requirements">
+        <div class="container">
+            <h2 class="section-title">Requisitos para Adotar</h2>
+            <div class="requirements-grid">
+                <div class="req-card">
+                    <div class="req-icon">🎂</div>
+                    <h3>Ter 18 Anos</h3>
+                    <p>Necessário ter maioridade legal</p>
+                </div>
+                <div class="req-card">
+                    <div class="req-icon">🏠</div>
+                    <h3>Ter uma Casa</h3>
+                    <p>Casa ou apartamento adequado</p>
+                </div>
+                <div class="req-card">
+                    <div class="req-icon">💰</div>
+                    <h3>Condições Financeiras</h3>
+                    <p>Para manutenção e vet</p>
+                </div>
+                <div class="req-card">
+                    <div class="req-icon">⏰</div>
+                    <h3>Tempo Disponível</h3>
+                    <p>Dedicação e cuidado diário</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SEÇÃO DISPONIBILIZAR PET ===== -->
+    <section id="disponibilizar" class="submit-pet-section">
+        <div class="container">
+            <h2 class="section-title">Disponibilize Seu Pet para Adoção</h2>
+            <p class="section-subtitle">Ajude a encontrar um novo lar para seu pet</p>
+
+            <form class="pet-form" id="petForm" onsubmit="submitPet(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="petNome">Nome do Pet *</label>
+                        <input type="text" id="petNome" required placeholder="Ex: Thor">
+                    </div>
+                    <div class="form-group">
+                        <label for="petTipo">Tipo de Animal *</label>
+                        <select id="petTipo" required>
+                            <option value="">Selecione</option>
+                            <option value="cachorro">Cachorro</option>
+                            <option value="gato">Gato</option>
+                            <option value="coelho">Coelho</option>
+                            <option value="passaro">Pássaro</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="petRaca">Raça *</label>
+                        <input type="text" id="petRaca" required placeholder="Ex: Labrador">
+                    </div>
+                    <div class="form-group">
+                        <label for="petIdade">Idade *</label>
+                        <select id="petIdade" required>
+                            <option value="">Selecione</option>
+                            <option value="filhote">Filhote (0-1 ano)</option>
+                            <option value="adulto">Adulto (1-7 anos)</option>
+                            <option value="idoso">Idoso (7+ anos)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="petGenero">Gênero *</label>
+                        <select id="petGenero" required>
+                            <option value="">Selecione</option>
+                            <option value="macho">Macho</option>
+                            <option value="femea">Fêmea</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="petTamanho">Tamanho *</label>
+                        <select id="petTamanho" required>
+                            <option value="">Selecione</option>
+                            <option value="pequeno">Pequeno</option>
+                            <option value="medio">Médio</option>
+                            <option value="grande">Grande</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="petDescricao">Descrição do Pet *</label>
+                    <textarea id="petDescricao" required placeholder="Descreva o temperamento, características especiais..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="petFoto">Foto do Pet</label>
+                    <input type="file" id="petFoto" accept="image/*">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomeProtetor">Seu Nome / Nome da ONG *</label>
+                        <input type="text" id="nomeProtetor" required placeholder="Ex: João Silva ou ONG Patinhas">
+                    </div>
+                    <div class="form-group">
+                        <label for="localizacaoPet">Localização *</label>
+                        <input type="text" id="localizacaoPet" required placeholder="Cidade, Estado">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="telefonePet">Telefone/WhatsApp *</label>
+                        <input type="tel" id="telefonePet" required placeholder="(11) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailPet">Email *</label>
+                        <input type="email" id="emailPet" required placeholder="seu@email.com">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-submit">
+                    <i class="fas fa-upload"></i> Disponibilizar Pet
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ===== MODAL DE ADOÇÃO ===== -->
+    <div id="adoptionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-pet-info">
+                <img id="modalPetImage" src="" alt="Pet">
+                <div class="modal-info">
+                    <h2 id="modalPetName"></h2>
+                    <div class="modal-details">
+                        <p><strong>Raça:</strong> <span id="modalPetRaca"></span></p>
+                        <p><strong>Idade:</strong> <span id="modalPetIdade"></span></p>
+                        <p><strong>Tamanho:</strong> <span id="modalPetTamanho"></span></p>
+                        <p><strong>Localização:</strong> <span id="modalPetLocal"></span></p>
+                        <p><strong>Descrição:</strong> <span id="modalPetDesc"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <form class="adoption-form" onsubmit="submitAdoption(event)">
+                <h3>Expresse seu Interesse em Adotar</h3>
+                
+                <div class="form-group">
+                    <label for="adoptNome">Seu Nome *</label>
+                    <input type="text" id="adoptNome" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="adoptEmail">Email *</label>
+                        <input type="email" id="adoptEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adoptTel">Telefone/WhatsApp *</label>
+                        <input type="tel" id="adoptTel" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adoptCidade">Cidade *</label>
+                    <input type="text" id="adoptCidade" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adoptMensagem">Por que quer adotar? *</label>
+                    <textarea id="adoptMensagem" required placeholder="Conte-nos um pouco sobre você e por que quer adotar este pet..."></textarea>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="adoptTermos" required>
+                    <label for="adoptTermos">Concordo em cumprir os requisitos de adoção e ser responsável pelo pet</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-heart"></i> Enviar Interesse
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== SEÇÃO SOBRE ===== -->
+    <section id="sobre" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Sobre CONECTA PET</h2>
+                    <p>A CONECTA PET é uma plataforma digital dedicada a conectar animais que precisam de um lar com pessoas que desejam adotar responsavelmente.</p>
+                    <p>Nosso objetivo é reduzir o abandono animal, fortalecer a adoção responsável e criar uma comunidade consciente sobre o bem-estar dos pets.</p>
+                    <div class="about-stats">
+                        <div class="stat">
+                            <h3>500+</h3>
+                            <p>Pets Adotados</p>
+                        </div>
+                        <div class="stat">
+                            <h3>1000+</h3>
+                            <p>Usuários Cadastrados</p>
+                        </div>
+                        <div class="stat">
+                            <h3>50+</h3>
+                            <p>ONGs Parceiras</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-values">
+                    <div class="value-card">
+                        <i class="fas fa-heart"></i>
+                        <h3>Missão</h3>
+                        <p>Conectar pessoas a animais e promover adoção responsável</p>
+                    </div>
+                    <div class="value-card">
+                        <i class="fas fa-eye"></i>
+                        <h3>Visão</h3>
+                        <p>Um mundo sem abandono animal</p>
+                    </div>
+                    <div class="value-card">
+                        <i class="fas fa-handshake"></i>
+                        <h3>Valores</h3>
+                        <p>Responsabilidade, compaixão e comunidade</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SEÇÃO DICAS ===== -->
+    <section id="dicas" class="tips-section">
+        <div class="container">
+            <h2 class="section-title">Dicas de Cuidado com Pets</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">🐕</div>
+                    <h3>Passeios Regulares</h3>
+                    <p>Leve seu cão para passear pelo menos 2-3 vezes por dia para exercício e socialização.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🍽️</div>
+                    <h3>Alimentação Adequada</h3>
+                    <p>Forneça ração de qualidade apropriada para a idade e tamanho do seu pet.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🏥</div>
+                    <h3>Visitas ao Veterinário</h3>
+                    <p>Consulte regularmente um veterinário para vacinações e check-ups de saúde.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">💇</div>
+                    <h3>Higiene e Grooming</h3>
+                    <p>Mantenha seu pet limpo e com unhas cortadas para uma boa saúde.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">🎮</div>
+                    <h3>Brincadeiras e Diversão</h3>
+                    <p>Dedique tempo para brincar e interagir com seu pet diariamente.</p>
+                </div>
+                <div class="tip-card">
+                    <div class="tip-icon">❤️</div>
+                    <h3>Amor e Carinho</h3>
+                    <p>O mais importante: ofereça muito amor, carinho e atenção ao seu companheiro.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SEÇÃO HISTÓRIAS DE SUCESSO ===== -->
+    <section class="stories-section">
+        <div class="container">
+            <h2 class="section-title">Histórias de Sucesso</h2>
+            <div class="stories-grid">
+                <div class="story-card">
+                    <img src="https://via.placeholder.com/300x200?text=Luna" alt="Luna">
+                    <h3>Luna Encontrou seu Lar</h3>
+                    <p>"Luna era uma gata assustada na rua. Agora é a rainha da casa!" - Mariana</p>
+                </div>
+                <div class="story-card">
+                    <img src="https://via.placeholder.com/300x200?text=Max" alt="Max">
+                    <h3>Max Virou Membro da Família</h3>
+                    <p>"Não imaginávamos a alegria que Max traria para nossas vidas." - Carlos</p>
+                </div>
+                <div class="story-card">
+                    <img src="https://via.placeholder.com/300x200?text=Bella" alt="Bella">
+                    <h3>Bella Recuperou a Felicidade</h3>
+                    <p>"Era uma cachorra triste. Hoje brinca e corre todos os dias!" - Ana</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SEÇÃO FAQ ===== -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Perguntas Frequentes</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3>Como funciona o processo de adoção?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Você navegue pelos pets disponíveis, clique em "Adotar", preenche o formulário com seus dados, e aguarda contato da ONG ou protetor para finalizar a adoção.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3>Qual é o custo da adoção?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>A CONECTA PET não cobra. O valor pode variar conforme a ONG/protetor, geralmente para cobrir custos veterinários.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3>Posso adotar se moro em apartamento?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim! Existem pets de todos os tamanhos e estilos. O importante é ter espaço adequado e dedicação.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        <h3>Como disponibilizar meu pet?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Acesse a seção "Disponibilizar Pet", preencha o formulário com os dados e fotos do seu pet, e ele será listado em nosso site.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer id="contato" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CONECTA PET</h3>
+                    <p>Plataforma de adoção responsável</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#pets">Encontrar Pets</a></li>
+                        <li><a href="#disponibilizar">Disponibilizar Pet</a></li>
+                        <li><a href="#sobre">Sobre</a></li>
+                        <li><a href="#dicas">Dicas</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contato</h4>
+                    <p>📧 <a href="mailto:contato@conectapet.com">contato@conectapet.com</a></p>
+                    <p>📱 <a href="tel:+5511999999999">(11) 99999-9999</a></p>
+                </div>
+                <div class="footer-section">
+                    <h4>Redes Sociais</h4>
+                    <div class="social-links">
+                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CONECTA PET - Projeto Integrador | Sistemas de Informação</p>
+                <p>Autores: Marcos Gabriel Alves Maciel | Cristian Vieira Silva Lins</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
